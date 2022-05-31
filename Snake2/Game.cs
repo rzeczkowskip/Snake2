@@ -54,7 +54,6 @@ namespace Snake2
                     RedrawScreen();
                     break;
                 case GameState.State.Running:
-                case GameState.State.Unpausing:
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -70,17 +69,10 @@ namespace Snake2
         {
             Console.Clear();
 
-            foreach (var p in _world.GetPoints())
-            {
-                _renderer.Render(p, Symbols.Wall);
-            }
-
-            foreach (var p in _gameState.Snake.GetBody())
-            {
-                _renderer.Render(p, Symbols.SnakeBody);
-            }
-
+            _renderer.Render(_world.GetPoints(), Symbols.Wall);
+            _renderer.Render(_gameState.Snake.GetBody(), Symbols.SnakeBody);
             _renderer.Render(_gameState.Snake.GetHead(), Symbols.SnakeHead);
+            
             DrawStatusBar();
         }
 
@@ -109,7 +101,7 @@ namespace Snake2
                         _gameState.Finish();
                         break;
                     }
-
+                    
                     if (snakeEdges.Head == foodPosition)
                     {
                         _gameState.Snake.Grow();
@@ -206,30 +198,35 @@ namespace Snake2
 
         private void DrawStatusBar()
         {
-            Console.SetCursorPosition(1, Console.WindowHeight - 1);
+            Console.SetCursorPosition(_world.Width + 3, 2);
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.Write("Level: ");
 
+            Console.SetCursorPosition(_world.Width + 3, Console.CursorTop + 1);
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.WriteLine($"{_gameState.Level} ");
+
+            Console.SetCursorPosition(_world.Width + 3, Console.CursorTop + 1);
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.Write("Score: ");
+
+            Console.SetCursorPosition(_world.Width + 3, Console.CursorTop + 1);
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.WriteLine($"{_gameState.Score} ");
+            
+            Console.SetCursorPosition(_world.Width + 3, Console.CursorTop + 1);
             Console.ForegroundColor = ConsoleColor.Cyan;
             if (_gameState.Current is GameState.State.Paused or GameState.State.Finished)
             {
                 Console.ForegroundColor = ConsoleColor.Cyan;
-                Console.Write(_gameState.Current == GameState.State.Paused ? "Pause" : "Finished");
+                Console.WriteLine(_gameState.Current == GameState.State.Paused ? "Pause" : "Finished");
                 Console.ForegroundColor = ConsoleColor.White;
-                Console.Write(" | ");
+            }
+            else
+            {
+                Console.WriteLine(new string(' ', 8)); // set count to longest status message
             }
 
-            Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.Write("Level: ");
-
-            Console.ForegroundColor = ConsoleColor.White;
-            Console.Write($"{_gameState.Level} ");
-
-            Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.Write("Score: ");
-
-            Console.ForegroundColor = ConsoleColor.White;
-            Console.Write($"{_gameState.Score} ");
-            
-            Console.Write(_gameState.FrameDelay);
         }
     }
 }

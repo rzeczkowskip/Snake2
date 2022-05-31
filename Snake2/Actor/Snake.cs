@@ -26,10 +26,10 @@ namespace Snake2.Actor
         public SnakeDirectionAxis DirectionAxis { get; private set; }
         private int _length = 3;
 
-        private List<Point> _snake = new();
+        private readonly List<Point> _snake = new();
 
-        private Point _topLeft;
-        private Point _bottomRight;
+        private readonly Point _topLeft;
+        private readonly Point _bottomRight;
 
         public Snake(Point topLeft, Point bottomRight)
         {

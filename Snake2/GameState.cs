@@ -5,8 +5,6 @@ namespace Snake2;
 
 public class GameState
 {
-    private readonly World _world;
-
     public enum State
     {
         None,
@@ -14,7 +12,6 @@ public class GameState
         Paused,
         Finished,
         GameOver,
-        Unpausing,
     }
     
     public State Current { get; private set; }
@@ -27,18 +24,17 @@ public class GameState
     
     public double FrameDelay => Snake.DirectionAxis == SnakeDirectionAxis.Y ? _frameDelay * 1.5 : _frameDelay;
 
-    private Random _random;
+    private readonly Random _random;
     
-    private Point _gameTopLeft;
-    private Point _gameBottomRight;
+    private readonly Point _gameTopLeft;
+    private readonly Point _gameBottomRight;
     
     public GameState(World world, int seed = 1337)
     {
-        _world = world;
         _random = new Random(seed);
         
-        _gameTopLeft = new Point(1, 1);
-        _gameBottomRight = new Point(_world.Width - 1, _world.Height - 1);
+        _gameTopLeft = new Point(2, 2);
+        _gameBottomRight = new Point(world.Width - 1, world.Height - 1);
         
         Snake = new Snake(
             _gameTopLeft,
@@ -63,7 +59,7 @@ public class GameState
 
     public void Start()
     {
-        if (Current is State.Running or State.Unpausing)
+        if (Current is State.Running)
         {
             throw new Exception("Game already running.");
         }
@@ -88,7 +84,7 @@ public class GameState
 
     public Point GenerateFood()
     {
-        Point point = Point.Empty;
+        Point point;
         
         do
         {
