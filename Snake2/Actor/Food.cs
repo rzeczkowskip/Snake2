@@ -24,19 +24,6 @@ namespace Snake2.Actor
             _random = new Random(seed);
         }
 
-        public Point GetNewFoodPosition()
-        {
-            Point point = Point.Empty;
-            
-            do
-            {
-                point = new Point(
-                    _random.Next(_topLeft.X, _bottomRight.X),
-                    _random.Next(_topLeft.Y, _bottomRight.Y)
-                );
-            } while (_snake.GetBody().Contains(point));
 
-            return point;
-        }
     }
 }

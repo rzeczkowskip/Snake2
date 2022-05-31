@@ -8,6 +8,7 @@ public class DefaultSymbols : SymbolProvider
     private const char Empty = ' ';
     private const char Food = 'x';
     private const char StatusBarBg = '\u2593';
+    private const char Wall = '\u2600';
 
     public char GetSymbol(Symbols symbol)
     {
@@ -19,6 +20,7 @@ public class DefaultSymbols : SymbolProvider
             Symbols.Empty => Empty,
             Symbols.Food => Food,
             Symbols.StatusBarBg => StatusBarBg,
+            Symbols.Wall => Wall,
             _ => Empty
         };
     }

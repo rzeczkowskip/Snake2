@@ -23,7 +23,7 @@ namespace Snake2.Actor
     public class Snake 
     {
         private SnakeDirection _direction;
-        private SnakeDirectionAxis _directionAxis;
+        public SnakeDirectionAxis DirectionAxis { get; private set; }
         private int _length = 3;
 
         private List<Point> _snake = new();
@@ -59,13 +59,13 @@ namespace Snake2.Actor
                 ? SnakeDirectionAxis.Y
                 : SnakeDirectionAxis.X;
 
-            if (newAxis == _directionAxis)
+            if (newAxis == DirectionAxis)
             {
                 return;
             }
 
             _direction = direction;
-            _directionAxis = newAxis;
+            DirectionAxis = newAxis;
         }
 
         public SnakeEdges Move()
@@ -91,22 +91,22 @@ namespace Snake2.Actor
                     throw new ArgumentOutOfRangeException();
             }
 
-            if (head.Y < 0)
+            if (head.Y < _topLeft.Y)
             {
                 head.Y = _bottomRight.Y;
             }
             else if (head.Y > _bottomRight.Y)
             {
-                head.Y = 0;
+                head.Y = _topLeft.Y;
             }
             
-            if (head.X < 0)
+            if (head.X < _topLeft.Y)
             {
                 head.X = _bottomRight.X;
             }
             else if (head.X > _bottomRight.X)
             {
-                head.X = 0;
+                head.X = _topLeft.X;
             }
 
             _snake.Add(head);

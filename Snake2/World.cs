@@ -14,15 +14,15 @@ public class World
         Width = width;
         Height = height;
         _walls = new List<Point>();
-        for (var i = 1; i <= width; i++)
+        for (var i = 0; i <= width; i++)
         {
-            _walls.Add(new Point(i ,1));
+            _walls.Add(new Point(i ,0));
             _walls.Add(new Point(i, height));
         }
 
-        for (var i = 2; i < height; i++)
+        for (var i = 0; i < height; i++)
         {
-            _walls.Add(new Point(1, i));
+            _walls.Add(new Point(0, i));
             _walls.Add(new Point(width, i));
         }
     }
