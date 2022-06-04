@@ -8,5 +8,5 @@ public enum Symbols
     Empty,
     Food,
     StatusBarBg,
-    Wall,
+    Wall
 }

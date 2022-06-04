@@ -10,7 +10,7 @@ public class Renderer
     {
         _symbolProvider = symbolProvider;
     }
-    
+
     public void Render(Point point, Symbols symbol)
     {
         Console.ForegroundColor = _symbolProvider.GetSymbolColor(symbol);
@@ -20,10 +20,7 @@ public class Renderer
     public void Render(List<Point> points, Symbols symbol)
     {
         Console.ForegroundColor = _symbolProvider.GetSymbolColor(symbol);
-        foreach (var point in points)
-        {
-            renderSymbol(point, symbol);
-        }
+        foreach (var point in points) renderSymbol(point, symbol);
     }
 
     public void ClearPoint(Point point)
@@ -34,6 +31,6 @@ public class Renderer
     private void renderSymbol(Point point, Symbols symbol)
     {
         Console.SetCursorPosition(point.X, point.Y);
-        Console.Write(_symbolProvider.GetSymbol(symbol)); 
+        Console.Write(_symbolProvider.GetSymbol(symbol));
     }
 }

@@ -11,7 +11,7 @@ public class StatusBar
     {
         _topLeft = topLeft;
     }
-    
+
     public void DrawStatus(GameState gameState)
     {
         var stateStatusMessage = gameState.Current switch
@@ -20,9 +20,9 @@ public class StatusBar
             GameState.State.Finished => "Game over",
             _ => new string(' ', 8) // set count to longest status message
         };
-        
+
         Console.SetCursorPosition(_topLeft.X, _topLeft.Y);
-        
+
         DrawLine(gameState.Level.ToString(), "Level");
         DrawLine(gameState.Score.ToString(), "Score");
         DrawLine(stateStatusMessage);
@@ -34,7 +34,7 @@ public class StatusBar
         {
             Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine($"{label}: ");
-            
+
             Console.SetCursorPosition(_topLeft.X, Console.CursorTop);
             Console.ForegroundColor = ConsoleColor.White;
         }
@@ -42,7 +42,7 @@ public class StatusBar
         {
             Console.ForegroundColor = ConsoleColor.Cyan;
         }
-        
+
         Console.WriteLine(message);
         Console.SetCursorPosition(_topLeft.X, Console.CursorTop + 1);
     }

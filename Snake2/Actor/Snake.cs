@@ -1,141 +1,118 @@
-using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
 
-namespace Snake2.Actor
+namespace Snake2.Actor;
+
+public enum SnakeDirection
 {
-    public enum SnakeDirection
+    Up,
+    Down,
+    Left,
+    Right,
+    Keep
+}
+
+public enum SnakeDirectionAxis
+{
+    Y,
+    X
+}
+
+public class Snake
+{
+    private readonly Point _bottomRight;
+
+    private readonly List<Point> _snake = new();
+
+    private readonly Point _topLeft;
+    private SnakeDirection _direction;
+    private int _length = 3;
+
+    public Snake(Point topLeft, Point bottomRight)
     {
-        Up,
-        Down,
-        Left,
-        Right,
-        Keep
+        _topLeft = topLeft;
+        _bottomRight = bottomRight;
+
+        UpdateDirection(SnakeDirection.Right);
+        _snake.Add(new Point(
+            (_bottomRight.X - _topLeft.X) / 2,
+            (_bottomRight.Y - _topLeft.Y) / 2
+        ));
     }
 
-    public enum SnakeDirectionAxis
+    public SnakeDirectionAxis DirectionAxis { get; private set; }
+
+    public List<Point> GetBody()
     {
-        Y,
-        X
+        return _snake;
     }
 
-    public class Snake 
+    public void UpdateDirection(SnakeDirection direction)
     {
-        private SnakeDirection _direction;
-        public SnakeDirectionAxis DirectionAxis { get; private set; }
-        private int _length = 3;
+        if (direction == SnakeDirection.Keep) return;
 
-        private readonly List<Point> _snake = new();
+        var newAxis = direction is SnakeDirection.Down or SnakeDirection.Up
+            ? SnakeDirectionAxis.Y
+            : SnakeDirectionAxis.X;
 
-        private readonly Point _topLeft;
-        private readonly Point _bottomRight;
+        if (newAxis == DirectionAxis) return;
 
-        public Snake(Point topLeft, Point bottomRight)
+        _direction = direction;
+        DirectionAxis = newAxis;
+    }
+
+    public SnakeEdges Move()
+    {
+        var head = GetHead();
+        var tail = GetTail();
+
+        switch (_direction)
         {
-            _topLeft = topLeft;
-            _bottomRight = bottomRight;
-
-            UpdateDirection(SnakeDirection.Right);
-            _snake.Add(new Point(
-                (_bottomRight.X - _topLeft.X) / 2,
-                (_bottomRight.Y - _topLeft.Y) / 2
-            ));
+            case SnakeDirection.Up:
+                head.Y -= 1;
+                break;
+            case SnakeDirection.Down:
+                head.Y += 1;
+                break;
+            case SnakeDirection.Left:
+                head.X -= 1;
+                break;
+            case SnakeDirection.Right:
+                head.X += 1;
+                break;
+            default:
+                throw new ArgumentOutOfRangeException();
         }
 
-        public List<Point> GetBody()
-        {
-            return _snake;
-        }
+        if (head.Y < _topLeft.Y)
+            head.Y = _bottomRight.Y;
+        else if (head.Y > _bottomRight.Y) head.Y = _topLeft.Y;
 
-        public void UpdateDirection(SnakeDirection direction)
-        {
-            if (direction == SnakeDirection.Keep)
-            {
-                return;
-            }
-            
-            SnakeDirectionAxis newAxis = direction is SnakeDirection.Down or SnakeDirection.Up
-                ? SnakeDirectionAxis.Y
-                : SnakeDirectionAxis.X;
+        if (head.X < _topLeft.Y)
+            head.X = _bottomRight.X;
+        else if (head.X > _bottomRight.X) head.X = _topLeft.X;
 
-            if (newAxis == DirectionAxis)
-            {
-                return;
-            }
+        _snake.Add(head);
 
-            _direction = direction;
-            DirectionAxis = newAxis;
-        }
+        if (_snake.Count > _length)
+            _snake.RemoveAt(0);
+        else
+            tail = Point.Empty;
 
-        public SnakeEdges Move()
-        {
-            Point head = GetHead();
-            Point tail = GetTail();
+        return new SnakeEdges(head, tail);
+    }
 
-            switch (_direction)
-            {
-                case SnakeDirection.Up:
-                    head.Y -= 1;
-                    break;
-                case SnakeDirection.Down:
-                    head.Y += 1;
-                    break;
-                case SnakeDirection.Left:
-                    head.X -= 1;
-                    break;
-                case SnakeDirection.Right:
-                    head.X += 1;
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
+    public void Grow()
+    {
+        _length += 1;
+    }
 
-            if (head.Y < _topLeft.Y)
-            {
-                head.Y = _bottomRight.Y;
-            }
-            else if (head.Y > _bottomRight.Y)
-            {
-                head.Y = _topLeft.Y;
-            }
-            
-            if (head.X < _topLeft.Y)
-            {
-                head.X = _bottomRight.X;
-            }
-            else if (head.X > _bottomRight.X)
-            {
-                head.X = _topLeft.X;
-            }
+    public Point GetHead()
+    {
+        return _snake.Last();
+    }
 
-            _snake.Add(head);
-
-            if (_snake.Count > _length)
-            {
-                _snake.RemoveAt(0);
-            }
-            else
-            {
-                tail = Point.Empty;
-            }
-
-            return new SnakeEdges(head, tail);
-        }
-
-        public void Grow()
-        {
-            _length += 1;
-        }
-
-        public Point GetHead()
-        {
-            return _snake.Last();
-        }
-
-        private Point GetTail()
-        {
-            return _snake.First();
-        }
+    private Point GetTail()
+    {
+        return _snake.First();
     }
 }

@@ -12,44 +12,45 @@ public class GameState
         Running,
         Paused,
         Finished,
-        GameOver,
+        GameOver
     }
-    
-    public State Current { get; private set; }
-    public Snake Snake { get; private set; }
-    
-    public int Score { get; private set; }
 
-    public int Level { get; private set; } = 1;
-    private int _frameDelay = 250;
-    
-    public double FrameDelay => Snake.DirectionAxis == SnakeDirectionAxis.Y ? _frameDelay * 1.5 : _frameDelay;
+    private readonly Point _gameBottomRight;
+
+    private readonly Point _gameTopLeft;
 
     private readonly Random _random;
-    
-    private readonly Point _gameTopLeft;
-    private readonly Point _gameBottomRight;
-    
+    private int _frameDelay = 250;
+
     public GameState(World world, int seed = 1337)
     {
         _random = new Random(seed);
-        
+
         _gameTopLeft = new Point(1, 1);
         _gameBottomRight = new Point(world.Width - 1, world.Height - 1);
-        
+
         Snake = new Snake(
             _gameTopLeft,
             _gameBottomRight
         );
-        
+
         Reload();
     }
+
+    public State Current { get; private set; }
+    public Snake Snake { get; private set; }
+
+    public int Score { get; private set; }
+
+    public int Level { get; private set; } = 1;
+
+    public double FrameDelay => Snake.DirectionAxis == SnakeDirectionAxis.Y ? _frameDelay * 1.5 : _frameDelay;
 
     public void Reload()
     {
         Level = 1;
         _frameDelay = 250;
-        
+
         Snake = new Snake(
             _gameTopLeft,
             _gameBottomRight
@@ -60,10 +61,7 @@ public class GameState
 
     public void Start()
     {
-        if (Current is State.Running)
-        {
-            throw new Exception("Game already running.");
-        }
+        if (Current is State.Running) throw new Exception("Game already running.");
 
         Current = State.Running;
     }
@@ -86,7 +84,7 @@ public class GameState
     public Point GenerateFood()
     {
         Point point;
-        
+
         do
         {
             point = new Point(
@@ -105,12 +103,9 @@ public class GameState
 
     public void IncreaseLevel()
     {
-        if (_frameDelay == 1)
-        {
-            return;
-        }
-            
+        if (_frameDelay == 1) return;
+
         Level += 1;
-        _frameDelay = Math.Max(_frameDelay - (_frameDelay / 2), 1);
+        _frameDelay = Math.Max(_frameDelay - _frameDelay / 2, 1);
     }
 }

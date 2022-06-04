@@ -31,7 +31,7 @@ public class DefaultSymbols : SymbolProvider
         {
             Symbols.SnakeHead => ConsoleColor.Cyan,
             Symbols.Food => ConsoleColor.Yellow,
-            _ => ConsoleColor.White,
+            _ => ConsoleColor.White
         };
     }
 }
