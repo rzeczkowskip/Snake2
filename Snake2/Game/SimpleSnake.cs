@@ -1,42 +1,27 @@
-﻿using System.Drawing;
-using Snake2.Actor;
+﻿using Snake2.Actor;
+using Snake2.Environment;
 using Snake2.Render;
 
-namespace Snake2
+namespace Snake2.Game
 {
-    public class Game
+    public class SimpleSnake : Game
     {
         private readonly World _world;
         private readonly Renderer _renderer;
+        private readonly StatusBar _statusBar;
         private readonly GameState _gameState;
-
-        private readonly (int, int) _minConsoleSize;
         
-        public Game(World world, Renderer renderer)
+        public SimpleSnake(World world, Renderer renderer, StatusBar statusBar)
         {
             _world = world;
             _renderer = renderer;
+            _statusBar = statusBar;
 
-            _minConsoleSize = (world.Width * 2, world.Height);
             _gameState = new GameState(world);
-        }
-
-        private bool ValidateGameWindow()
-        {
-            return Console.WindowWidth > _minConsoleSize.Item1 && Console.WindowHeight > _minConsoleSize.Item2;
         }
 
         public int Play()
         {
-            while (!ValidateGameWindow())
-            {
-                Console.WriteLine(
-                    $"Zły rozmiar okna gry. Minimalne wymiary wymagane do uruchomienia to " +
-                    $"{_minConsoleSize.Item1}x{_minConsoleSize.Item1}");
-                Console.WriteLine("Zmień rozmiar i naciśnij enter");
-                Console.ReadKey();
-            }
-            
             switch (_gameState.Current)
             {
                 case GameState.State.None:
@@ -73,7 +58,7 @@ namespace Snake2
             _renderer.Render(_gameState.Snake.GetBody(), Symbols.SnakeBody);
             _renderer.Render(_gameState.Snake.GetHead(), Symbols.SnakeHead);
             
-            DrawStatusBar();
+            _statusBar.DrawStatus(_gameState);
         }
 
         private void GameLoop()
@@ -89,7 +74,7 @@ namespace Snake2
                 }
 
                 ProcessUserInput();
-                DrawStatusBar();
+                _statusBar.DrawStatus(_gameState);
 
                 _renderer.Render(foodPosition, Symbols.Food);
 
@@ -194,39 +179,6 @@ namespace Snake2
             };
 
             _gameState.Snake.UpdateDirection(newDirection);
-        }
-
-        private void DrawStatusBar()
-        {
-            Console.SetCursorPosition(_world.Width + 3, 2);
-            Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.Write("Level: ");
-
-            Console.SetCursorPosition(_world.Width + 3, Console.CursorTop + 1);
-            Console.ForegroundColor = ConsoleColor.White;
-            Console.WriteLine($"{_gameState.Level} ");
-
-            Console.SetCursorPosition(_world.Width + 3, Console.CursorTop + 1);
-            Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.Write("Score: ");
-
-            Console.SetCursorPosition(_world.Width + 3, Console.CursorTop + 1);
-            Console.ForegroundColor = ConsoleColor.White;
-            Console.WriteLine($"{_gameState.Score} ");
-            
-            Console.SetCursorPosition(_world.Width + 3, Console.CursorTop + 1);
-            Console.ForegroundColor = ConsoleColor.Cyan;
-            if (_gameState.Current is GameState.State.Paused or GameState.State.Finished)
-            {
-                Console.ForegroundColor = ConsoleColor.Cyan;
-                Console.WriteLine(_gameState.Current == GameState.State.Paused ? "Pause" : "Finished");
-                Console.ForegroundColor = ConsoleColor.White;
-            }
-            else
-            {
-                Console.WriteLine(new string(' ', 8)); // set count to longest status message
-            }
-
         }
     }
 }

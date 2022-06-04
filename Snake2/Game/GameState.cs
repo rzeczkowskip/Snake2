@@ -1,7 +1,8 @@
 using System.Drawing;
 using Snake2.Actor;
+using Snake2.Environment;
 
-namespace Snake2;
+namespace Snake2.Game;
 
 public class GameState
 {
@@ -33,7 +34,7 @@ public class GameState
     {
         _random = new Random(seed);
         
-        _gameTopLeft = new Point(2, 2);
+        _gameTopLeft = new Point(1, 1);
         _gameBottomRight = new Point(world.Width - 1, world.Height - 1);
         
         Snake = new Snake(

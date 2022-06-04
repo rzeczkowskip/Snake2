@@ -1,6 +1,6 @@
 using System.Drawing;
 
-namespace Snake2;
+namespace Snake2.Environment;
 
 public class World
 {
@@ -14,6 +14,7 @@ public class World
         Width = width;
         Height = height;
         _walls = new List<Point>();
+        
         for (var i = 0; i <= width; i++)
         {
             _walls.Add(new Point(i ,0));
