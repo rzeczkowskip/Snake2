@@ -7,7 +7,7 @@ Console.Clear();
 Console.CursorVisible = false;
 
 var gameCreator = new GameCreator();
-var game = gameCreator.CreateGame(new DefaultSymbols());
+var game = gameCreator.CreateGame(new ExtendedSymbols());
 
 var score = game.Play();
 

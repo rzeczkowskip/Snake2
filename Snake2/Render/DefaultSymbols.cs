@@ -10,7 +10,7 @@ public class DefaultSymbols : SymbolProvider
     private const char StatusBarBg = '\u2593';
     private const char Wall = '\u2600';
 
-    public char GetSymbol(Symbols symbol)
+    public virtual char GetSymbol(Symbols symbol)
     {
         return symbol switch
         {
